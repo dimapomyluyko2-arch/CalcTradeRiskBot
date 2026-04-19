@@ -32,11 +32,11 @@ class UserSettings(Base):
     __tablename__ = "user_settings"
 
     user_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
-    exchange_risk_1: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=Decimal("2.5"))
-    exchange_risk_2: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=Decimal("2.0"))
-    prop_balance:    Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, default=Decimal("10000"))
+    exchange_risk_1: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=Decimal("2"))
+    exchange_risk_2: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=Decimal("2.5"))
+    prop_balance:    Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, default=Decimal("1000"))
     prop_risk_1:     Mapped[Decimal] = mapped_column(Numeric(5,  2), nullable=False, default=Decimal("0.5"))
-    prop_risk_2:     Mapped[Decimal] = mapped_column(Numeric(5,  2), nullable=False, default=Decimal("1.5"))
+    prop_risk_2:     Mapped[Decimal] = mapped_column(Numeric(5,  2), nullable=False, default=Decimal("1"))
 
     def __repr__(self) -> str:
         return (

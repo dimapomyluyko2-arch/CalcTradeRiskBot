@@ -51,8 +51,8 @@ def main_menu_kb():
 def settings_inline_kb(s: UserSettings):
     builder = InlineKeyboardBuilder()
     rows = [
-        ("exchange_risk_1", f"Exchange Risk 1: ${s.exchange_risk_1}"),
-        ("exchange_risk_2", f"Exchange Risk 2: ${s.exchange_risk_2}"),
+        ("exchange_risk_1", f"Loss in USDT(1-st option): ${s.exchange_risk_1}"),   #Ризик для біржі
+        ("exchange_risk_2", f"Loss in USDT(2-nd option): ${s.exchange_risk_2}"),   #Ризик для біржі
         ("prop_balance",    f"Prop Balance: ${s.prop_balance}"),
         ("prop_risk_1",     f"Prop Risk 1: {s.prop_risk_1}%"),
         ("prop_risk_2",     f"Prop Risk 2: {s.prop_risk_2}%"),
@@ -102,7 +102,7 @@ def format_report(
     prop_risk2_usd = round(p_bal * p_r2 / 100, 2)
 
     lines = [
-        "📊 *POSITION SIZE REPORT*",
+        "📊 *POSITION SIZE*",
         "",
         "Entry: `" + str(entry) + "` \u2502 Stop: `" + str(stop) + "`",
         "",
@@ -136,9 +136,14 @@ def format_report(
 async def cmd_start(message: Message, state: FSMContext, repo: UserRepo):
     await state.clear()
     await repo.get_or_create(message.from_user.id)
-    await message.answer(
-        "👋 Вітаю\\! Я бот для розрахунку розміру позиції\\.\n\n"
-        "Натисни *🧮 Порахувати ризик* та введи ціни\\.",
+    await message.answer_photo(
+        photo="https://pin.it/1veGVRM4i",
+        caption=(
+            "👋 Вітаю\\! Я бот для розрахунку розміру позиції\\.\n\n"
+            "🏦 *Exchange* — фіксований ризик у доларах\n"
+            "🏢 *Prop Firm* — ризик у відсотках від балансу\n\n"
+            "Натисни *🧮 Порахувати ризик* та введи ціни\\."
+        ),
         parse_mode="MarkdownV2",
         reply_markup=main_menu_kb(),
     )
@@ -239,8 +244,8 @@ async def process_prices(message: Message, state: FSMContext, repo: UserRepo):
 
         ex1   = calculate_position_size(entry, stop, Decimal(str(settings.exchange_risk_1)))
         ex2   = calculate_position_size(entry, stop, Decimal(str(settings.exchange_risk_2)))
-        prop1 = calculate_position_size(entry, stop, round(p_bal * p_r1 / 100, 2))
-        prop2 = calculate_position_size(entry, stop, round(p_bal * p_r2 / 100, 2))
+        prop1 = calculate_position_size(entry, stop, round(p_bal * p_r1 / 100, 2))/ 5
+        prop2 = calculate_position_size(entry, stop, round(p_bal * p_r2 / 100, 2)) / 5
 
     except Exception as exc:
         await message.answer(
